@@ -7,7 +7,12 @@ export default {
     extend: {
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+        archivo: ["Archivo", "Black"]
       },
+      colors: {
+        'regal-blue': '#795458',
+      },
+
     },
   },
   plugins: [],
