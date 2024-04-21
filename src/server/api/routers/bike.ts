@@ -36,5 +36,38 @@ export const bikeRouter = createTRPCRouter({
       }
     )
   }),
+  makeBusy: protectedProcedure.input(z.object({bikeId: z.string()})).mutation(async ({ctx, input}) => {
+    return ctx.db.bike.update(
+      {
+        where: {
+          id: input.bikeId
+        },
+        data: {
+          available: false
+        }
+      }
+    )
+  }),
+  makeAvailable: protectedProcedure.input(z.object({bikeId: z.string()})).mutation(async ({ctx, input}) => {
+    return ctx.db.bike.update(
+      {
+        where: {
+          id: input.bikeId
+        },
+        data: {
+          available: true
+        }
+      }
+    )
+  }),
+  delete: protectedProcedure.input(z.object({bikeId: z.string()})).mutation(({ctx, input}) => {
+    return ctx.db.bike.delete(
+      {
+        where: {
+          id: input.bikeId
+        },
+      }
+    )
+  })
 });
 
