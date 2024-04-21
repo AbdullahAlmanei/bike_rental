@@ -2,31 +2,36 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { Map } from "@components/pages/components/map";
+import { useRouter } from 'next/router';
+import {bikeInterface} from '@components/server/api/routers/bike'
 
 import { api } from "@components/utils/api";
-import {datesOverlap} from "@components/utils/helpers";
+import { useEffect, useState } from "react";
 
-export default function Home() {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
-  const {data: bikeData, error: bikeError, isLoading: loadingBikes } = api.bike.getAll.useQuery()
-  const {data: resvData, error: resvError, isLoading: loadingResv } = api.reservation.getBikeReservations.useQuery({bikeId: "sd"});
 
-  function handleClick(){
-    const now = new Date()
-    const tmrw = new Date()
 
-    const rangeNow = {
-      startDate: now,
-      endDate: tmrw
-    }
-    const someOverlap = resvData?.some(resv => datesOverlap(rangeNow, {startDate: resv.startDate, endDate: resv.endDate} ))
-    if(someOverlap)
-      {
-        console.log("overlap")
-      }
-    else console.log("meow")
+export default  function Bike() {
+  const router = useRouter();
+  const bikeId  = router.query.bikeId as string;
+  const {data: bikeData, error: bikeError, isLoading: loadingBike } = api.bike.getById.useQuery({bikeId: bikeId});
+  
 
-  }
+
+  // const [bike, setBike] = useState<bikeInterface>({id: '0', model: '',
+  // color: '',
+  // available: false,
+  // rating: 0,
+  // lat: 0,
+  // lng: 0});
+  
+  // useEffect(() => {
+  //   if(typeof bikeId === 'string'){
+  //     const {data: bikeData, error: bikeError, isLoading: loadingBike } = api.bike.getById.useQuery({bikeId: bikeId});
+  //     if(bikeData)
+  //     setBike(bikeData)
+  //   }
+  // }, [bikeId])
+
   return (
     <>
       <Head>
@@ -37,30 +42,27 @@ export default function Home() {
       <main className=" flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#DAC0A3] to-[#EADBC8] mt-12	">
         <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
           <h1 className="text-5xl font-archivo-black font-bold tracking-tight text-white sm:text-[5rem]">
-            Rent <span className="text-[#795458]">YOUR</span> bike today!
+            Take <span className="text-[#795458]">ME</span> for a spin!
           </h1>
           <div className="grid grid-cols-5 gap-1 sm:grid-cols-4 md:gap-8">
-            <div>
-              {loadingBikes || loadingResv ? <div className=" text-center w-48 h-48 flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"> Loading </div> : bikeData?.map((bike) =>           
-              <Link onClick={handleClick} key={bike.id}
+            {<div>
+              {loadingBike ? <div className=" text-center w-48 h-48 flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"> Loading </div> :        
+              <Link  key={bikeData?.id}
               className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 text-white hover:bg-white/20"
-              href={{ pathname: '/bike/[bikeId]', query: { bikeId: bike.id } }}
-            ><h3 className="text-2xl font-bold">{bike.color}</h3>
+              href='/bike'
+            ><h3 className="text-2xl font-bold">{bikeData?.color}</h3>
             <div className="text-lg">
-              {bike.model}
-            </div></Link>)}
-            </div>
-
-
+              {bikeData?.model}
+            </div></Link>}
+            </div> }
 
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-2xl text-white">
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </p>
-            <AuthShowcase />
+          <div>
+            <h2 className="text-5xl font-archivo-black font-bold tracking-tight mb-8 text-white sm:text-[3rem]">
+              Where to <span className="text-[#795458]">find</span> me...
+            </h2>
+            <Map lat={bikeData?.lat} long={bikeData?.lng} bike_id={"mewo"}/>
           </div>
-          <Map lat={24.7136} long={46.6753} bike_id={"mewo"}/>
         </div>
       </main>
     </>

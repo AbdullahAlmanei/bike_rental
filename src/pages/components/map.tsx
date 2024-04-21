@@ -5,14 +5,22 @@ import { useEffect } from "react";
 import { Loader } from "@googlemaps/js-api-loader";
 
 interface Props {
-    lat: number
-    long: number
+    lat: number | undefined
+    long: number | undefined
     bike_id: string
   }
   
 
-export const Map = ({lat, long, bike_id}: Props) => {
+export const Map = ({lat= 24.7136, long= 46.6753, bike_id}: Props) => {
     const mapRef = React.useRef<HTMLDivElement>(null)
+    if(typeof lat === 'undefined')
+        {
+            lat = 24.7136
+        }
+    if(typeof long === 'undefined')
+        {
+            long = 46.6753;
+        }
     useEffect(() =>
     {
         const initMap = async () => {
@@ -43,6 +51,6 @@ export const Map = ({lat, long, bike_id}: Props) => {
     }, [])
 
     return(
-        <div style={{height: '600px', width: '600px'}} ref={mapRef}></div>
+        <div style={{height: '500px', width: '500px'}} ref={mapRef}></div>
     )
 };

@@ -10,7 +10,9 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "local:push": "dotenv -e .env.local -- prisma db push",
+    "studio": "dotenv -e .env.local -- prisma studio"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.4.0",
