@@ -2,7 +2,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Head from "next/head";
 import { Map } from "@components/pages/components/map";
 import { useRouter } from "next/router";
-import redBike from "public/bike-sport-travel-svgrepo-com.png";
+import redBike from "public/bike_image.png";
 import Image from "next/image";
 
 import { api } from "@components/utils/api";
@@ -143,7 +143,7 @@ export default function Bike() {
             <h2 className="font-archivo-black mb-8 text-5xl font-bold tracking-tight text-white sm:text-[3rem]">
               Where to <span className="text-[#795458]">find</span> me...
             </h2>
-            <Map lat={bikeData?.lat} long={bikeData?.lng} bike_id={"mewo"} />
+            {bikeData?.lat ? <Map lat={bikeData?.lat} long={bikeData?.lng} bike_id={bikeData?.id} />: <></>}
           </div>
         </div>
       </main>
